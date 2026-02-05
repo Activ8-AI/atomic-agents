@@ -11,7 +11,7 @@ example-mcp-server = { path = "../example-mcp-server", develop = true }
 pydantic = ">=2.10.3,<3.0.0"
 rich = ">=13.0.0"
 openai = ">=1.0.0"
-mcp = {extras = ["cli"], version = "^1.9.4"}
+mcp = {extras = ["cli"], version = "^1.23.0"}
 fastapi = "^0.115.14"
 
 [build-system]
