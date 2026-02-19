@@ -1,6 +1,6 @@
 import uvicorn
-from fastapi import FastAPI, Request
-import os, json, datetime
+from fastapi import FastAPI, HTTPException, Request
+from starlette.concurrency import run_in_threadpool
 
 from custody.custodian_ledger import log_event
 from telemetry.emit_heartbeat import generate_heartbeat
@@ -24,10 +24,10 @@ async def relay(request: Request):
     tool = body.get("tool")
 
     if not envelope or not tool:
-        log_event("RELAY_INVALID", {"body": body})
-        return {"error": "Invalid envelope"}
+        await run_in_threadpool(log_event, "RELAY_INVALID", {"body": body})
+        raise HTTPException(status_code=400, detail="Invalid envelope")
 
-    log_event("RELAY_RECEIVED", {"tool": tool, "envelope": envelope})
+    await run_in_threadpool(log_event, "RELAY_RECEIVED", {"tool": tool, "envelope": envelope})
     return {"status": "received", "tool": tool}
 
 if __name__ == "__main__":

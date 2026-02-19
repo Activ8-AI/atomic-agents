@@ -1,5 +1,6 @@
 import os
-import requests
+import shlex
+import sys
 from custody.custodian_ledger import log_event
 
 def load_secrets():
@@ -20,5 +21,9 @@ def load_secrets():
     log_event("SECRETS_LOADED", list(secrets.keys()))
     return secrets
 
+def emit_shell_exports(secrets):
+    for k, v in secrets.items():
+        sys.stdout.write(f"export {k}={shlex.quote(str(v))}\n")
+
 if __name__ == "__main__":
-    load_secrets()
+    emit_shell_exports(load_secrets())
